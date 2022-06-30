@@ -1,4 +1,7 @@
-''' little app to read pilot trace and correlated with data trace
+''' methods linking to the segyio module for:
+      read_segy_file
+      write_segy_file
+      inspect
 '''
 from pathlib import Path
 import numpy as np
@@ -10,6 +13,9 @@ class Segy:
 
     def __init__(self):
         pass
+
+    def __repr__(self):
+        return f'{help(self)}'
 
     @staticmethod
     def read_segy_file(filename: Path, endian: str = 'big') -> np.ndarray:
