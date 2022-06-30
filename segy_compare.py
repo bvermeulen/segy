@@ -3,7 +3,7 @@ from pathlib import Path
 import numpy as np
 from scipy.signal import butter, lfilter, filtfilt, welch
 import matplotlib.pyplot as plt
-import segyio
+from segy_interface import Segy
 
 segy_filename_haniya = Path('./data_files/vibe_sweep/Haniya-GF-SGY/210426_03.sgy')
 segy_filename_lekhwair = Path('./data_files/vibe_sweep/Lekhwair-GF-SGY/local_200225_03.sgy')
@@ -38,21 +38,22 @@ def zerophase_filter(data, lowcut, highcut, fs, order=5):
 
 
 def plot_gf(ax, segy_filename, pilot_trace, gf_trace, endian='big', color='black'):
-    with segyio.open(segy_filename, ignore_geometry=True, endian=endian,) as segy_obj:
-        for trace_number in range(4):
-            time_ms = []
-            sample_val = []
-            for i, val in enumerate(segy_obj.trace[trace_number]):
-                time_ms.append(i * int(1000 * dt))
-                sample_val.append(float(val))
+    traces = Segy().read_segy_file(segy_filename, endian=endian)
 
-            ax[trace_number].plot(time_ms, sample_val, color=color)
+    for trace_number, trace in enumerate(traces):
+        time_ms = []
+        sample_val = []
+        for i, val in enumerate(trace):
+            time_ms.append(i * int(1000 * dt))
+            sample_val.append(float(val))
 
-            if trace_number == pilot_trace:
-                pilot = list(zip(time_ms, sample_val))
+        ax[trace_number].plot(time_ms, sample_val, color=color)
 
-            if trace_number == gf_trace:
-                gf = list(zip(time_ms, sample_val))
+        if trace_number == pilot_trace:
+            pilot = list(zip(time_ms, sample_val))
+
+        if trace_number == gf_trace:
+            gf = list(zip(time_ms, sample_val))
 
     return pilot, gf
 
