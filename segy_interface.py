@@ -14,8 +14,19 @@ class Segy:
     def __init__(self):
         pass
 
+    def __str__(self):
+        return (
+            f'{self.read_segy_file.__name__}:\n {self.read_segy_file.__doc__}\n'
+            f'{self.write_segy_file.__name__}:\n {self.write_segy_file.__doc__}\n'
+            f'{self.inspect.__name__}:\n {self.inspect.__doc__}'
+        )
+
     def __repr__(self):
-        return f'{help(self)}'
+        return (
+            f'{self.read_segy_file.__name__}:\n {self.read_segy_file.__doc__}\n'
+            f'{self.write_segy_file.__name__}:\n {self.write_segy_file.__doc__}\n'
+            f'{self.inspect.__name__}:\n {self.inspect.__doc__}'
+        )
 
     @staticmethod
     def read_segy_file(filename: Path, endian: str = 'big') -> np.ndarray:
